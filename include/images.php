@@ -1,12 +1,12 @@
 <?php
 
   function imageLoad($file) {
-    $folder = dirname(__FILE__).'/images';
+    $folder = _ROOT_DIR_.'/images';
     if (!$file['error']) {
       if ($filename = imageGenName($file['type'], $folder.'/big')) {
         if (move_uploaded_file($file['tmp_name'], $folder.'/big/'.$filename)) {
-          imageThumb($folder.'/big/'.$filename, $folder.'/small/'.$filename, 100);
-          imageThumb($folder.'/big/'.$filename, $folder.'/medium/'.$filename, 300);
+          imageThumb($folder.'/big/'.$filename, $folder.'/small/'.$filename, 350);
+          imageThumb($folder.'/big/'.$filename, $folder.'/medium/'.$filename, 600);
           return $filename;
         }
       }

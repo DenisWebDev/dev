@@ -16,7 +16,7 @@
     tplSet('meta_title', 'Каталог товаров');
 
     tplSet('products', productGetList());
-    
+
     render('admin_index');
   }
 
@@ -41,7 +41,19 @@
       tplSet('data', $data);
     }
 
+    if ($id) {
+      tplSet('meta_title', 'Редактирование товара ID '.$id);
+    } else {
+      tplSet('meta_title', 'Новый товар');
+    }
+
     render('admin_product_form');
+  }
+
+  function actionProductDelete() {
+    productDelete((int)reqGet('id'));
+    message('Товар удален', 'green');
+    redirect('/admin.php');
   }
 
 ?>

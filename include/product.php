@@ -7,7 +7,16 @@
 
     $item = _validate($id, $data, $errors);
 
-    $item['image'] = '';
+    if (!empty($_FILES['image']['name'])) {
+      if (!$errors) {
+        $item['image'] = imageLoad($_FILES['image']);
+        if (!$item['image']) {
+          $errors[] = 'Ошибка загрузки картинки';
+        }
+      }
+    } elseif (!$id) {
+      $errors[] = 'Не задана картинка';
+    }
 
     if (!$errors) {
       if ($id) {
@@ -33,6 +42,10 @@
     if ($item['name'] === '') {
       $errors[] = 'Не задано название товара';
     }
+    $item['description'] = trim(strip_tags($data['description'] ?? ''));
+    if ($item['description'] === '') {
+      $errors[] = 'Не задано описание товара';
+    }
     $item['price'] = intval($data['price'] ?? 0);
     if ($item['price'] <= 0) {
       $errors[] = 'Не задана цена товара';
@@ -48,6 +61,11 @@
     return dbRow('SELECT *
       FROM product WHERE id = '.(int)$id.'
       LIMIT 1');
+  }
+
+  function productDelete($id) {
+    $sql = 'DELETE FROM product WHERE id = '.(int)$id;
+    return dbQ($sql);
   }
 
 ?>
