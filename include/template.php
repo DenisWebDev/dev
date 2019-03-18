@@ -12,7 +12,20 @@
       })($tpl);
       $content = ob_get_clean();
     }
+    while (ob_get_level()) {
+      if (_DEBUG_) {
+        $output = trim(ob_get_clean());
+        if ($output !== '') {
+          echo $output;
+          exit();
+        }
+      } else {
+        ob_end_clean();
+      }
+    }
+    header("Content-type: text/html; charset=utf-8");
     require _ROOT_DIR_.'/template/_template.php';
+    exit();
   }
 
   function _tplData($key = null, $value = null) {
@@ -36,6 +49,11 @@
     }
     $data = _tplData($key);
     return $data === null ? $default : $data;
+  }
+
+  function notfound() {
+    header('HTTP/1.0 404 Not Found');
+    render('notfound');
   }
 
 ?>

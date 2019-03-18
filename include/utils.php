@@ -14,24 +14,48 @@
     echo '</pre>';
   }
 
-  function message($message, $type) {
+  function message($messages, $type) {
     if (!isset($_SESSION['messages'])) {
       $_SESSION['messages'] = [
         'error' => [],
         'success' => [],
       ];
     }
-    $_SESSION['messages'][$type][] = $message;
+    if (!is_array($messages)) {
+      $messages = [$messages];
+    }
+    foreach ($messages as $message) {
+      $_SESSION['messages'][$type][] = $message;
+    }
   }
 
   function getMessagesToPrint() {
     if (isset($_SESSION['messages'])) {
       $messages = $_SESSION['messages'];
       unset($_SESSION['messages']);
-      return $messages;
+      return array_filter($messages);
     }
     return [];
   }
 
+  function redirect($url = null) {
+    if ($url === null) {
+      $url = $_SERVER['REQUEST_URI'];
+    }
+    header('Location: '.$url);
+    exit();
+  }
+
+  function isReqPost($key) {
+    return array_key_exists($key, $_POST);
+  }
+
+  function reqPost($key, $default = false) {
+    return $_POST[$key] ?? $default;
+  }
+
+  function reqGet($key, $default = false) {
+    return $_GET[$key] ?? $default;
+  }
 
 ?>
